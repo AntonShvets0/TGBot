@@ -123,7 +123,8 @@ namespace TelegramBot
                 Id = update.Message.From.Id,
                 Username = update.Message.From.Username,
                 FirstName = update.Message.From.FirstName,
-                LastName = update.Message.From.LastName
+                LastName = update.Message.From.LastName,
+                Bot = this
             };
 
             Users.Add(u);

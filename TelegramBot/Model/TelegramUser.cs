@@ -12,7 +12,9 @@
         
         public object Worker = new object();
 
-        
+        public Bot Bot;
+
+
         public string ResponseData;
         public bool ResponseToVar;
 
