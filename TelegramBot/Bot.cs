@@ -19,6 +19,11 @@ namespace TelegramBot
         private int OffsetId = 0;
 
         private Dictionary<Error, string> _errorData = new Dictionary<Error, string>();
+
+        public static Dictionary<int, Dictionary<string, string>> KeyboardData
+            = new Dictionary<int, Dictionary<string, string>>();
+
+        public static object KeyboardLock = new object();
         
         public Bot(string accessToken, string nsCommand, Assembly assembly)
         {
@@ -51,9 +56,7 @@ namespace TelegramBot
         {
             while (true)
             {
-                var updates = Api.Updates.Get(OffsetId);
-
-                foreach (var update in updates)
+                foreach (var update in Api.Updates.Get(OffsetId))
                 {
                     if (update.CallbackQuery == null && (update.Message.Text == null || !update.Message.Text.StartsWith("/")))
                         continue;
@@ -79,6 +82,12 @@ namespace TelegramBot
         {
             new Thread(() =>
             {
+                if (user.ResponseToVar)
+                {
+                    user.ResponseData = update.Message.Text;
+                    return;
+                }
+                
                 lock (user.Worker)
                 {
                     if (update.CallbackQueryId != 0)

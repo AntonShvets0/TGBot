@@ -11,5 +11,18 @@
         public string LastName;
         
         public object Worker = new object();
+
+        
+        public string ResponseData;
+        public bool ResponseToVar;
+
+        public string ReadMessage()
+        {
+            ResponseToVar = true;
+            while (ResponseData == null) { }
+
+            ResponseToVar = false;
+            return ResponseData;
+        }
     }
 }

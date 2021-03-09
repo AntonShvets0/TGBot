@@ -9,23 +9,19 @@ namespace TelegramBot.Api
 {
     public class Updates : Api
     {
-        public List<UpdateModel> Get(int offset = 0)
+        public IEnumerable<UpdateModel> Get(int offset = 0)
         {
             var updates = CallMethod("getUpdates", new NameValueCollection
             {
                 {"offset", offset != 0 ? offset.ToString() : null}
             });
-
-            var list = new List<UpdateModel>();
-
-            var test = updates.ToString().Replace('\r', '\0').Replace('\n', '\0');
-
+            
             foreach (var obj in updates["result"])
             {
                 var message = obj["callback_query"] != null ? obj["callback_query"]["message"] : obj["message"];
                 var from = obj["callback_query"] != null ? message["chat"] : message["from"];
                 
-                list.Add(new UpdateModel
+                var model = new UpdateModel
                 {
                     Id = (int)obj["update_id"],
                     Message = new MessageModel
@@ -43,10 +39,20 @@ namespace TelegramBot.Api
                     },
                     CallbackQuery = obj["callback_query"]?["data"]?.ToString(),
                     CallbackQueryId = obj["callback_query"] != null ? (long)obj["callback_query"]["id"] : 0,
-                });
+                };
+
+                lock (Bot.KeyboardLock)
+                {
+                    if (Bot.KeyboardData.ContainsKey(model.Message.From.Id) 
+                        && Bot.KeyboardData[model.Message.From.Id].ContainsKey(model.Message.Text))
+                    {
+                        model.CallbackQuery = Bot.KeyboardData[model.Message.From.Id][model.Message.Text];
+                        Bot.KeyboardData[model.Message.From.Id] = new Dictionary<string, string>();
+                    }
+                }
+
+                yield return model;
             }
-            
-            return list;
         }
     }
 }
