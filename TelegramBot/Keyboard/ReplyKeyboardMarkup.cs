@@ -9,7 +9,7 @@ namespace TelegramBot.Keyboard
         private bool Resize;
         private int User;
         
-        public ReplyKeyboardMarkup(TelegramUser user, bool resize = true)
+        public ReplyKeyboardMarkup(TelegramUser user, bool resize = false)
         {
             User = user.Id;
             Resize = resize;
@@ -46,7 +46,7 @@ namespace TelegramBot.Keyboard
 
                 for (int j = 0; j < Keyboard[i].Count; j++)
                 {
-                    (jArray[i] as JArray).Add(new JArray(Keyboard[i][j].Text));
+                    (jArray[i] as JArray).Add(Keyboard[i][j].Text);
 
                     lock (Bot.KeyboardLock)
                     {
@@ -58,7 +58,8 @@ namespace TelegramBot.Keyboard
             return new JObject
             {
                 { "keyboard", jArray },
-                { "resize_keyboar", Resize }
+                { "resize_keyboard", Resize },
+                { "one_time_keyboard", true }
             }.ToString();
         }
     }

@@ -24,6 +24,8 @@
             while (ResponseData == null) { }
 
             ResponseToVar = false;
+            ResponseData = null;
+            
             return ResponseData;
         }
     }

@@ -2,6 +2,7 @@
 {
     public enum Error
     {
-        UnknownCommand
+        UnknownCommand,
+        NotAccess
     }
 }

@@ -58,10 +58,14 @@ namespace TelegramBot
             {
                 foreach (var update in Api.Updates.Get(OffsetId))
                 {
-                    if (update.CallbackQuery == null && (update.Message.Text == null || !update.Message.Text.StartsWith("/")))
-                        continue;
-
                     var user = Users.FirstOrDefault(u => u.Id == update.Message.From.Id);
+                    OffsetId = update.Id + 1;
+
+                    if (
+                        (!user?.ResponseToVar ?? true) 
+                        && update.CallbackQuery == null 
+                        && (update.Message.Text == null || !update.Message.Text.StartsWith("/")))
+                        continue;
 
                     if (user != null)
                     {
@@ -72,8 +76,6 @@ namespace TelegramBot
                         user = CreateUser(update);
                         HandleUser(user, update);
                     }
-
-                    OffsetId = update.Id + 1;
                 }
             }
         }
