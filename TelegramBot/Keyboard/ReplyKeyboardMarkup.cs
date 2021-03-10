@@ -9,7 +9,7 @@ namespace TelegramBot.Keyboard
         private bool Resize;
         private int User;
         
-        public ReplyKeyboardMarkup(TelegramUser user, bool resize = false)
+        public ReplyKeyboardMarkup(TelegramUser user, bool resize = true)
         {
             User = user.Id;
             Resize = resize;

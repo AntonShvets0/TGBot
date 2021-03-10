@@ -24,9 +24,12 @@
             while (ResponseData == null) { }
 
             ResponseToVar = false;
+
+            var response = ResponseData.ToString();
+            
             ResponseData = null;
             
-            return ResponseData;
+            return response;
         }
     }
 }
